@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
     ImageView imgView;
     TextView textView;
-    String site_url = "http://10.0.2.2:8000";
+    String site_url = BuildConfig.BASE_URL;
     JSONObject post_json;
     String imageUrl = null;
     Bitmap bmImg = null;
@@ -104,10 +104,8 @@ public class MainActivity extends AppCompatActivity {
             HttpURLConnection conn = null;
             try {
                 String apiUrl = urls[0];
-                String token = "71eb7dce37396754d07af16e1a2a4b7819a3b39d";
                 URL urlAPI = new URL(apiUrl);
                 conn = (HttpURLConnection) urlAPI.openConnection();
-                conn.setRequestProperty("Authorization", "Token " + token);
                 conn.setRequestMethod("GET");
                 conn.setConnectTimeout(3000);
                 conn.setReadTimeout(3000);

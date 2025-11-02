@@ -1,6 +1,18 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
 }
+
+
+val localProperties = Properties()
+val localFile = rootProject.file("local.properties")
+if (localFile.exists()) {
+    localProperties.load(localFile.inputStream())
+}
+
+val baseUrl: String = localProperties.getProperty("BASE_URL")
+    ?: "http://10.0.2.2:8000/api_root"
 
 android {
     namespace = "com.playjnj.photoviewer"
@@ -8,6 +20,9 @@ android {
         version = release(36)
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
     defaultConfig {
         applicationId = "com.playjnj.photoviewer"
         minSdk = 24
@@ -16,6 +31,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
