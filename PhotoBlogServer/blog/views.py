@@ -21,7 +21,7 @@ class BlogImage(viewsets.ModelViewSet):
 
 def post_list(request):
     "게시글 전체 목록"
-    posts = Post.objects.order_by("-created_date")
+    posts = Post.objects.order_by("created_date")
     return render(request, "blog/post_list.html", {"posts": posts})
 
 
