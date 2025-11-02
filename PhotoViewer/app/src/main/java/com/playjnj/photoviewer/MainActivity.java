@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     String imageUrl = null;
     Bitmap bmImg = null;
     CloadImage taskDownload;
-    SwipeRefreshLayout swipeRefresh; // added
+    SwipeRefreshLayout swipeRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
