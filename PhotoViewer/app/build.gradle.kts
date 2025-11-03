@@ -12,7 +12,7 @@ if (localFile.exists()) {
 }
 
 val baseUrl: String = localProperties.getProperty("BASE_URL")
-    ?: "http://10.0.2.2:8000/api_root"
+    ?: "http://10.0.2.2:8000/"
 
 android {
     namespace = "com.playjnj.photoviewer"
