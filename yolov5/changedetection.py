@@ -3,6 +3,7 @@ import os
 import pathlib
 
 import cv2
+import requests
 from dotenv import load_dotenv
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
@@ -58,5 +59,5 @@ class ChangeDetection:
         # Post Create
         data = {"title": self.title, "text": self.text, "created_date": now, "published_date": now}
         file = {"image": open(full_path, "rb")}
-        # res = requests.post(self.HOST + "/api_root/Post/", data=data, files=file, headers=headers)
-        # print(res)
+        res = requests.post(self.HOST + "/api_root/Post/", data=data, files=file, headers=headers)
+        print(res)
