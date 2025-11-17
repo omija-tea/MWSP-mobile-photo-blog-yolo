@@ -47,6 +47,7 @@ from ultralytics.utils.plotting import Annotator, colors, save_one_box
 
 from models.common import DetectMultiBackend
 from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
+from changedetection import ChangeDetection
 from utils.general import (
     LOGGER,
     Profile,
@@ -165,6 +166,7 @@ def run(
     model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data, fp16=half)
     stride, names, pt = model.stride, model.names, model.pt
     imgsz = check_img_size(imgsz, s=stride)  # check image size
+    cd = ChangeDetection(names)
 
     # Dataloader
     bs = 1  # batch_size
@@ -241,6 +243,7 @@ def run(
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             imc = im0.copy() if save_crop else im0  # for save_crop
             annotator = Annotator(im0, line_width=line_thickness, example=str(names))
+            detected = [0 for _ in range(len(names))]
             if len(det):
                 # Rescale boxes from img_size to im0 size
                 det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
@@ -252,6 +255,7 @@ def run(
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
+                    detected[int(cls)] = 1
                     c = int(cls)  # integer class
                     label = names[c] if hide_conf else f"{names[c]}"
                     confidence = float(conf)
@@ -277,7 +281,7 @@ def run(
                         annotator.box_label(xyxy, label, color=colors(c, True))
                     if save_crop:
                         save_one_box(xyxy, imc, file=save_dir / "crops" / names[c] / f"{p.stem}.jpg", BGR=True)
-
+            cd.add(names, detected, save_dir, im0)
             # Stream results
             im0 = annotator.result()
             if view_img:
