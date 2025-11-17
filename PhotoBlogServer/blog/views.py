@@ -11,7 +11,7 @@ from .forms import PostForm
 
 
 class BlogImage(viewsets.ModelViewSet):
-    queryset = Post.objects.all()
+    queryset = Post.objects.order_by("-created_date")
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
@@ -21,7 +21,7 @@ class BlogImage(viewsets.ModelViewSet):
 
 def post_list(request):
     "게시글 전체 목록"
-    posts = Post.objects.order_by("created_date")
+    posts = Post.objects.order_by("-created_date")
     return render(request, "blog/post_list.html", {"posts": posts})
 
 
