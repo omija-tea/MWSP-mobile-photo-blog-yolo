@@ -15,6 +15,7 @@ class ChangeDetection:
     result_prev = []
     HOST = "http://127.0.0.1:8000"
     token = os.getenv("DJANGO_TOKEN")
+    FP_tolerance = 0.5
 
     def __init__(self, names):
         self.result_prev = [0 for i in range(len(names))]
@@ -26,13 +27,19 @@ class ChangeDetection:
         change_flag = 0
         i = 0
         while i < len(self.result_prev):
-            if self.result_prev[i] == 0 and detected_current[i] == 1:
-                change_flag = 1
-                self.title = names[i]
-                self.text += names[i] + ","
-            i += 1
-        self.result_prev = detected_current[:]
+            if self.result_prev[i] != detected_current[i]:
+                if self.result_prev[i] <= detected_current[i]:
+                    self.result_prev[i] += self.FP_tolerance
+                    if self.result_prev[i] > 1:
+                        self.result_prev[i] = 1
+                else:
+                    self.result_prev[i] = 0
 
+                if self.result_prev[i] == 1:
+                    change_flag = 1
+                    self.title = names[i]
+                    self.text += names[i] + ","
+                i += 1
         if change_flag == 1:
             self.send(save_dir, image)
 
