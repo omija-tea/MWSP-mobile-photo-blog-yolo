@@ -3,12 +3,18 @@ import os
 import pathlib
 
 import cv2
+import requests
+from dotenv import load_dotenv
+
+BASE_DIR = pathlib.Path(__file__).resolve().parent
+
+load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 
 class ChangeDetection:
     result_prev = []
     HOST = "http://127.0.0.1:8000"
-    token = "96096680879135f4218da11ac6062e550cda2445"
+    token = os.getenv("DJANGO_TOKEN")
 
     def __init__(self, names):
         self.result_prev = [0 for i in range(len(names))]
@@ -46,5 +52,5 @@ class ChangeDetection:
         # Post Create
         data = {"title": self.title, "text": self.text, "created_date": now, "published_date": now}
         file = {"image": open(full_path, "rb")}
-        # res = requests.post(self.HOST + "/api_root/Post/", data=data, files=file, headers=headers)
-        # print(res)
+        res = requests.post(self.HOST + "/api_root/Post/", data=data, files=file, headers=headers)
+        print(res)
