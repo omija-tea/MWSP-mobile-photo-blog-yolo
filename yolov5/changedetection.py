@@ -13,7 +13,7 @@ load_dotenv(dotenv_path=BASE_DIR / ".env")
 
 class ChangeDetection:
     result_prev = []
-    HOST = "http://127.0.0.1:8000"
+    HOST = os.getenv("HOST")
     token = os.getenv("DJANGO_TOKEN")
     FP_tolerance = 0.5
 
